@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { Upload, FileText, Image as ImageIcon, X, AlertCircle } from 'lucide-react';
+import { useUser } from '@clerk/nextjs';
 
 interface HealthParameter {
   name: string;
@@ -15,9 +16,11 @@ interface FileUploadProps {
   onDataExtracted: (data: HealthParameter[]) => void;
   isProcessing: boolean;
   setIsProcessing: (processing: boolean) => void;
+  onReportSaved?: () => void; // Add this prop
 }
 
-export default function FileUpload({ onDataExtracted, isProcessing, setIsProcessing }: FileUploadProps) {
+export default function FileUpload({ onDataExtracted, isProcessing, setIsProcessing, onReportSaved }: FileUploadProps) {
+  const { isSignedIn, user } = useUser();
   const [dragActive, setDragActive] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [error, setError] = useState<string>('');
@@ -127,14 +130,53 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
       const result = await response.json();
       console.log('✅ Health data parsed:', result.parameters);
 
+      // Save to database ONLY if user is signed in and we have parameters
+      if (isSignedIn && user?.id && result.parameters?.length > 0) {
+        setProgress('Saving report to your account...');
+        
+        try {
+          const saveResponse = await fetch('/api/save-report', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-user-id': user.id, // Send user ID in header
+            },
+            body: JSON.stringify({
+              fileName: uploadedFile.name,
+              fileSize: uploadedFile.size,
+              extractedText: text, // Fix: use 'text' not 'text.data.text'
+              healthParameters: result.parameters,
+            }),
+          });
+
+          const saveResult = await saveResponse.json();
+          
+          if (saveResult.success) {
+            setProgress('✅ Report saved to your account!');
+            // Trigger refresh in parent component
+            if (onReportSaved) {
+              onReportSaved();
+            }
+          } else {
+            setProgress('⚠️ Analysis complete (save failed)');
+          }
+        } catch (saveError) {
+          console.error('Error saving report:', saveError);
+          setProgress('⚠️ Analysis complete (save failed)');
+        }
+      } else if (!isSignedIn) {
+        setProgress('✅ Analysis complete! (Sign in to save reports)');
+      } else {
+        setProgress('✅ Analysis complete!');
+      }
+
       // Update UI
-      setProgress('Analysis complete! 🎉');
       onDataExtracted(result.parameters || []);
       
       // Clear progress after showing success
       setTimeout(() => {
         setProgress('');
-      }, 3000);
+      }, 4000);
       
     } catch (err) {
       console.error('❌ Processing error:', err);

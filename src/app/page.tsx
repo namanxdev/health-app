@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import FileUpload from './components/FileInput';
 import HealthParametersTable from './components/HealthParameters';
+import ReportHistory from './components/ReportHistory';
 
 interface HealthParameter {
   name: string;
@@ -32,10 +33,28 @@ export default function Home() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [healthParameters, setHealthParameters] = useState<HealthParameter[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [refreshReports, setRefreshReports] = useState(0); // Trigger to refresh report history
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleDataExtracted = (data: HealthParameter[]) => {
     console.log('📊 Received health parameters in page.tsx:', data);
     setHealthParameters(data);
+    
+    // Trigger report history refresh if user is signed in
+    if (isSignedIn) {
+      setRefreshReports(prev => prev + 1);
+    }
+  };
+
+  const handleReportSaved = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
+
+  const handleReportSelect = (parameters: HealthParameter[]) => {
+    setHealthParameters(parameters);
+    // Scroll to results
+    const resultsSection = document.getElementById('results-section');
+    resultsSection?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const getStatusCounts = () => {
@@ -210,6 +229,7 @@ export default function Home() {
                   onDataExtracted={handleDataExtracted}
                   isProcessing={isProcessing}
                   setIsProcessing={setIsProcessing}
+                  onReportSaved={handleReportSaved}
                 />
               </div>
 
@@ -304,13 +324,22 @@ export default function Home() {
                       </div>
                       <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                         <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                        <span>No Data Stored {!isSignedIn && '(unless you sign up)'}</span>
+                        <span>{isSignedIn ? 'Data Saved Securely' : 'No Data Stored (unless you sign up)'}</span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          )}
+
+          {/* Report History - Only for Authenticated Users */}
+          {isSignedIn && user && (
+            <ReportHistory 
+              userId={user.id} 
+              onReportSelect={handleReportSelect}
+              refreshTrigger={refreshTrigger}
+            />
           )}
         </div>
       </main>
