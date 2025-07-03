@@ -79,42 +79,39 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
   };
 
   const processFile = async () => {
-    if (!uploadedFile) return;
+    if (!uploadedFile) {
+      setError('Please select a file to upload');
+      return;
+    }
 
     setIsProcessing(true);
     setError('');
-    setProgress('Initializing OCR...');
+    setProgress('Starting file analysis...');
 
     try {
-      // Dynamic import of tesseract.js (only loads when needed)
+      // OCR Processing
+      setProgress('Extracting text from your lab report...');
       const { createWorker } = await import('tesseract.js');
       
-      setProgress('Starting text extraction...');
-      
-      // Create Tesseract worker
       const worker = await createWorker('eng', 1, {
         logger: (m) => {
           console.log('Tesseract:', m);
           if (m.status === 'recognizing text') {
-            setProgress(`Extracting text... ${Math.round(m.progress * 100)}%`);
+            const progress = Math.round(m.progress * 100);
+            setProgress(`Analyzing document... ${progress}%`);
           }
         }
       });
 
-      setProgress('Processing image...');
-      
-      // Perform OCR
       const { data: { text } } = await worker.recognize(uploadedFile);
       
       console.log('✅ OCR completed. Extracted text:');
       console.log(text);
       
-      // Terminate worker to free memory
       await worker.terminate();
-      
-      setProgress('Parsing health data...');
-      
-      // Send extracted text to API for parsing
+
+      // Parse health parameters
+      setProgress('Analyzing health parameters...');
       const response = await fetch('/api/process-report', {
         method: 'POST',
         headers: {
@@ -128,18 +125,23 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
       }
 
       const result = await response.json();
-      
       console.log('✅ Health data parsed:', result.parameters);
+
+      // Update UI
+      setProgress('Analysis complete! 🎉');
+      onDataExtracted(result.parameters || []);
       
-      onDataExtracted(result.parameters);
-      setProgress('Complete!');
+      // Clear progress after showing success
+      setTimeout(() => {
+        setProgress('');
+      }, 3000);
       
     } catch (err) {
       console.error('❌ Processing error:', err);
       setError('Failed to process the file. Please try again.');
+      setProgress('');
     } finally {
       setIsProcessing(false);
-      setTimeout(() => setProgress(''), 2000); // Clear progress after 2s
     }
   };
 
