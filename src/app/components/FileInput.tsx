@@ -98,7 +98,7 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
       
       const worker = await createWorker('eng', 1, {
         logger: (m) => {
-          console.log('Tesseract:', m);
+          // console.log('Tesseract:', m);
           if (m.status === 'recognizing text') {
             const progress = Math.round(m.progress * 100);
             setProgress(`Analyzing document... ${progress}%`);
@@ -108,8 +108,8 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
 
       const { data: { text } } = await worker.recognize(uploadedFile);
       
-      console.log('✅ OCR completed. Extracted text:');
-      console.log(text);
+      // console.log('✅ OCR completed. Extracted text:');
+      // console.log(text);
       
       await worker.terminate();
 
@@ -128,7 +128,7 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
       }
 
       const result = await response.json();
-      console.log('✅ Health data parsed:', result.parameters);
+      // console.log('✅ Health data parsed:', result.parameters);
 
       // Save to database ONLY if user is signed in and we have parameters
       if (isSignedIn && user?.id && result.parameters?.length > 0) {
@@ -161,7 +161,7 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
             setProgress('⚠️ Analysis complete (save failed)');
           }
         } catch (saveError) {
-          console.error('Error saving report:', saveError);
+          // console.error('Error saving report:', saveError);
           setProgress('⚠️ Analysis complete (save failed)');
         }
       } else if (!isSignedIn) {
@@ -179,7 +179,7 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
       }, 4000);
       
     } catch (err) {
-      console.error('❌ Processing error:', err);
+      // console.error('❌ Processing error:', err);
       setError('Failed to process the file. Please try again.');
       setProgress('');
     } finally {

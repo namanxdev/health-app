@@ -33,17 +33,11 @@ export default function Home() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [healthParameters, setHealthParameters] = useState<HealthParameter[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [refreshReports, setRefreshReports] = useState(0); // Trigger to refresh report history
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleDataExtracted = (data: HealthParameter[]) => {
     console.log('📊 Received health parameters in page.tsx:', data);
     setHealthParameters(data);
-    
-    // Trigger report history refresh if user is signed in
-    if (isSignedIn) {
-      setRefreshReports(prev => prev + 1);
-    }
   };
 
   const handleReportSaved = () => {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { FileText, Calendar, Download, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
+import { FileText, Calendar, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface HealthParameter {
   name: string;
