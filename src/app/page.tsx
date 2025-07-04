@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useUser, SignInButton, SignOutButton } from '@clerk/nextjs';
 import { 
-  FileText, 
   Activity, 
   Upload, 
   Zap, 
@@ -36,7 +35,7 @@ export default function Home() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleDataExtracted = (data: HealthParameter[]) => {
-    console.log('📊 Received health parameters in page.tsx:', data);
+    // console.log('📊 Received health parameters in page.tsx:', data);
     setHealthParameters(data);
   };
 
@@ -78,66 +77,88 @@ export default function Home() {
   const statusCounts = getStatusCounts();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      {/* Animated Background Elements */}
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Requested Radial Gradient Background */}
+      <div className="absolute inset-0 -z-10 h-full w-full bg-white dark:bg-slate-900 [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)] dark:[background:radial-gradient(125%_125%_at_50%_10%,#0f172a_40%,#4c1d95_100%)]"></div>
+      
+      {/* Beautiful Floating Orbs with Reduced Animation */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-4 -right-4 w-72 h-72 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute -bottom-8 -left-4 w-72 h-72 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-r from-blue-400 to-green-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        {/* Large gradient orbs with subtle animation */}
+        <div className="absolute -top-48 -right-48 w-[500px] h-[500px] bg-gradient-to-br from-blue-300/40 via-indigo-400/30 to-purple-500/25 dark:from-blue-600/30 dark:via-indigo-700/25 dark:to-purple-800/20 rounded-full blur-3xl animate-float opacity-50"></div>
+        <div className="absolute -bottom-48 -left-48 w-[450px] h-[450px] bg-gradient-to-br from-purple-300/40 via-pink-400/30 to-rose-500/25 dark:from-purple-600/30 dark:via-pink-700/25 dark:to-rose-800/20 rounded-full blur-3xl animate-float-delayed opacity-50"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-br from-cyan-300/40 via-teal-400/30 to-emerald-500/25 dark:from-cyan-600/30 dark:via-teal-700/25 dark:to-emerald-800/20 rounded-full blur-3xl animate-pulse-slow opacity-40"></div>
+        
+        {/* Medium floating elements */}
+        <div className="absolute top-20 right-1/4 w-48 h-48 bg-gradient-to-br from-yellow-300/50 via-orange-400/40 to-red-500/30 dark:from-yellow-600/40 dark:via-orange-700/30 dark:to-red-800/25 rounded-full blur-2xl animate-bounce-gentle opacity-60"></div>
+        <div className="absolute bottom-32 left-1/4 w-36 h-36 bg-gradient-to-br from-green-300/50 via-teal-400/40 to-blue-500/30 dark:from-green-600/40 dark:via-teal-700/30 dark:to-blue-800/25 rounded-full blur-xl animate-float-reverse opacity-60"></div>
+        
+        {/* Small accent orbs */}
+        <div className="absolute top-1/4 left-1/6 w-24 h-24 bg-gradient-to-br from-violet-400/60 to-purple-600/50 dark:from-violet-600/50 dark:to-purple-800/40 rounded-full blur-lg animate-pulse opacity-70"></div>
+        <div className="absolute bottom-1/4 right-1/6 w-32 h-32 bg-gradient-to-br from-pink-400/60 to-rose-600/50 dark:from-pink-600/50 dark:to-rose-800/40 rounded-full blur-lg animate-float opacity-70"></div>
       </div>
 
-      {/* Header with Auth Options */}
-      <div className="relative z-50 flex justify-between items-center p-6 bg-white/80 backdrop-blur-sm border-b border-white/20">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-            <Activity className="h-6 w-6 text-white" />
+      {/* Ultra-Beautiful Enhanced Header */}
+      <div className="relative z-50 flex flex-col sm:flex-row justify-between items-center p-4 sm:p-6 bg-gradient-to-r from-white/90 via-purple-50/80 to-pink-50/90 dark:from-slate-900/90 dark:via-purple-900/80 dark:to-pink-900/90 backdrop-blur-xl border-b border-purple-300/60 shadow-2xl hover:shadow-3xl transition-all duration-700 hover:bg-gradient-to-r hover:from-white/95 hover:via-purple-50/85 hover:to-pink-50/95 dark:hover:from-slate-900/95 dark:hover:via-purple-900/85 dark:hover:to-pink-900/95">
+        <div className="flex items-center space-x-3 mb-4 sm:mb-0 group">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-xl blur opacity-60 group-hover:opacity-90 transition-opacity duration-500 animate-pulse"></div>
+            <div className="relative w-12 h-12 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-2xl group-hover:scale-125 group-hover:rotate-6 transition-all duration-500">
+              <Activity className="h-6 w-6 text-white group-hover:animate-pulse" />
+            </div>
           </div>
           <div>
-            <h2 className="font-semibold text-gray-900 dark:text-white">Health Analyzer</h2>
-            <p className="text-xs text-gray-500">AI-Powered Lab Report Analysis</p>
+            <h2 className="text-lg font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent animate-gradient-text">
+              HealthAnalyzer Pro
+            </h2>
+            <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">
+              ✨ AI-Powered Professional Analysis
+            </p>
           </div>
         </div>
         
-        <div className="flex items-center space-x-4">
+        <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3">
           {isSignedIn ? (
             <>
-              {/* User Info Card */}
-              <div className="flex items-center space-x-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 shadow-sm">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                  <UserIcon className="h-4 w-4 text-white" />
+              {/* Ultra-Beautiful User Card */}
+              <div className="group flex items-center space-x-3 bg-gradient-to-r from-white/95 via-blue-50/85 to-indigo-50/95 dark:from-slate-800/95 dark:via-blue-900/85 dark:to-indigo-900/95 backdrop-blur-xl rounded-2xl px-6 py-4 border border-blue-300/70 shadow-2xl hover:shadow-3xl transition-all duration-700 hover:scale-110 hover:bg-gradient-to-r hover:from-blue-50/95 hover:via-indigo-50/85 hover:to-purple-50/95 dark:hover:from-blue-900/95 dark:hover:via-indigo-900/85 dark:hover:to-purple-900/95">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-xl blur opacity-50 group-hover:opacity-90 transition-opacity duration-500 animate-pulse"></div>
+                  <div className="relative w-12 h-12 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-2xl group-hover:rotate-12 group-hover:scale-125 transition-all duration-500">
+                    <UserIcon className="h-6 w-6 text-white" />
+                  </div>
                 </div>
                 <div className="text-sm">
-                  <p className="font-medium text-gray-900 dark:text-white">
+                  <p className="font-bold bg-gradient-to-r from-gray-900 to-blue-900 dark:from-white dark:to-blue-100 bg-clip-text text-transparent">
                     {user?.firstName} {user?.lastName}
                   </p>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs">
+                  <p className="text-gray-600 dark:text-gray-400 text-xs font-medium">
                     {user?.primaryEmailAddress?.emailAddress}
                   </p>
                 </div>
               </div>
               
-              {/* Sign Out Button */}
+              {/* Ultra-Beautiful Sign Out Button */}
               <SignOutButton>
-                <button className="flex items-center space-x-2 bg-red-500/10 hover:bg-red-500/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 transition-all border border-red-200/50">
-                  <LogOut className="h-4 w-4" />
+                <button className="group flex items-center space-x-2 bg-gradient-to-r from-red-50 via-rose-50 to-pink-50 hover:from-red-100 hover:via-rose-100 hover:to-pink-100 dark:from-red-900/40 dark:via-rose-900/40 dark:to-pink-900/40 dark:hover:from-red-900/60 dark:hover:via-rose-900/60 dark:hover:to-pink-900/60 backdrop-blur-xl rounded-2xl px-6 py-4 text-sm font-bold text-red-600 dark:text-red-400 transition-all duration-500 border border-red-300/50 shadow-2xl hover:shadow-3xl hover:scale-110 hover:bg-gradient-to-r hover:from-red-100 hover:via-rose-100 hover:to-pink-100 dark:hover:from-red-800/70 dark:hover:via-rose-800/70 dark:hover:to-pink-800/70">
+                  <LogOut className="h-4 w-4 group-hover:rotate-180 transition-transform duration-500" />
                   <span>Sign Out</span>
                 </button>
               </SignOutButton>
             </>
           ) : (
-            /* Sign In/Up Buttons for Non-Authenticated Users */
+            /* Enhanced Beautiful Auth Buttons */
             <div className="flex items-center space-x-3">
               <SignInButton mode="modal">
-                <button className="flex items-center space-x-2 bg-blue-500/10 hover:bg-blue-500/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 transition-all border border-blue-200/50">
-                  <UserIcon className="h-4 w-4" />
+                <button className="group flex items-center space-x-2 bg-gradient-to-r from-gray-100 via-slate-100 to-gray-100 hover:from-gray-200 hover:via-slate-200 hover:to-gray-200 dark:from-slate-700 dark:via-slate-600 dark:to-slate-700 dark:hover:from-slate-600 dark:hover:via-slate-500 dark:hover:to-slate-600 backdrop-blur-xl rounded-2xl px-5 py-3 text-sm font-bold text-gray-700 dark:text-gray-300 transition-all duration-300 border border-gray-300/40 shadow-lg hover:shadow-xl hover:scale-105">
+                  <UserIcon className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                   <span>Sign In</span>
                 </button>
               </SignInButton>
               
               <SignInButton mode="modal">
-                <button className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-full px-4 py-2 text-sm font-medium transition-all shadow-sm">
-                  <UserPlus className="h-4 w-4" />
-                  <span>Sign Up</span>
+                <button className="group flex items-center space-x-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white backdrop-blur-xl rounded-2xl px-5 py-3 text-sm font-bold transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 border border-white/20">
+                  <UserPlus className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
+                  <span>Sign Up Free</span>
                 </button>
               </SignInButton>
             </div>
@@ -145,132 +166,237 @@ export default function Home() {
         </div>
       </div>
 
-      <main className="relative z-10 py-8">
-        <div className="container mx-auto px-4 max-w-7xl">
-          {/* Welcome Header */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-6">
-              <Activity className="h-8 w-8 text-white animate-pulse" />
+      <main className="relative z-10 py-8 sm:py-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          {/* Beautiful Enhanced Welcome Section */}
+          <div className="text-center mb-12 lg:mb-16">
+            <div className="relative inline-flex items-center justify-center p-4 mb-8 group">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl blur-lg opacity-50 group-hover:opacity-75 animate-pulse-slow transition-opacity duration-300"></div>
+              <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-4 shadow-2xl group-hover:scale-110 transition-transform duration-500">
+                <Activity className="h-10 w-10 text-white animate-bounce" />
+              </div>
             </div>
             
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent mb-4 leading-tight">
-              {isSignedIn ? `Welcome back, ${user?.firstName}! 👋` : 'Health Report Analyzer 🏥'}
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black mb-4 lg:mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-gradient-x">
+                {isSignedIn ? `Welcome, ${user?.firstName}! ` : 'Beautiful Health Analysis'}
+              </span>
             </h1>
             
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl lg:text-2xl text-gray-700 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed font-medium">
               {isSignedIn 
-                ? "Ready to analyze your health reports? Upload a lab report to get started."
-                : "Transform your lab reports into actionable insights using AI-powered OCR technology. No account required!"
+                ? "Ready to transform your health data into beautiful insights? Upload your lab reports and watch the magic happen! 🎯✨"
+                : "Experience the most beautiful and intelligent health analysis platform. Transform your lab reports into stunning, actionable insights! 🚀💫"
               }
             </p>
 
-            {/* Status Pills */}
-            <div className="flex flex-wrap justify-center gap-4 mt-8">
-              <div className="flex items-center space-x-2 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
-                <Brain className="h-4 w-4 text-blue-500" />
-                <span className="text-sm font-medium">AI-Powered</span>
+            {/* Beautiful Enhanced Feature Pills */}
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mt-10 sm:mt-12">
+              <div className="group flex items-center space-x-3 bg-gradient-to-r from-blue-50/90 via-indigo-50/80 to-purple-50/90 dark:from-blue-900/40 dark:via-indigo-900/30 dark:to-purple-900/40 backdrop-blur-xl rounded-2xl px-6 py-4 border border-blue-200/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-translate-y-1">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl blur opacity-30 group-hover:opacity-60 transition-opacity duration-300"></div>
+                  <div className="relative p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
+                    <Brain className="h-5 w-5 text-white group-hover:animate-pulse" />
+                  </div>
+                </div>
+                <span className="text-sm font-bold bg-gradient-to-r from-blue-700 to-indigo-700 dark:from-blue-300 dark:to-indigo-300 bg-clip-text text-transparent">
+                  AI-Powered Analysis
+                </span>
               </div>
-              <div className="flex items-center space-x-2 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
-                <Zap className="h-4 w-4 text-yellow-500" />
-                <span className="text-sm font-medium">Instant Results</span>
+              
+              <div className="group flex items-center space-x-3 bg-gradient-to-r from-yellow-50/90 via-orange-50/80 to-amber-50/90 dark:from-yellow-900/40 dark:via-orange-900/30 dark:to-amber-900/40 backdrop-blur-xl rounded-2xl px-6 py-4 border border-yellow-200/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-translate-y-1">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-xl blur opacity-30 group-hover:opacity-60 transition-opacity duration-300"></div>
+                  <div className="relative p-2 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-xl">
+                    <Zap className="h-5 w-5 text-white group-hover:animate-bounce" />
+                  </div>
+                </div>
+                <span className="text-sm font-bold bg-gradient-to-r from-yellow-700 to-orange-700 dark:from-yellow-300 dark:to-orange-300 bg-clip-text text-transparent">
+                  Lightning Fast Results
+                </span>
               </div>
-              <div className="flex items-center space-x-2 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
-                <Shield className="h-4 w-4 text-green-500" />
-                <span className="text-sm font-medium">{isSignedIn ? 'Secure & Private' : 'No Account Needed'}</span>
+              
+              <div className="group flex items-center space-x-3 bg-gradient-to-r from-green-50/90 via-emerald-50/80 to-teal-50/90 dark:from-green-900/40 dark:via-emerald-900/30 dark:to-teal-900/40 backdrop-blur-xl rounded-2xl px-6 py-4 border border-green-200/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-translate-y-1">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl blur opacity-30 group-hover:opacity-60 transition-opacity duration-300"></div>
+                  <div className="relative p-2 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl">
+                    <Shield className="h-5 w-5 text-white group-hover:animate-pulse" />
+                  </div>
+                </div>
+                <span className="text-sm font-bold bg-gradient-to-r from-green-700 to-emerald-700 dark:from-green-300 dark:to-emerald-300 bg-clip-text text-transparent">
+                  {isSignedIn ? 'Ultra Secure Storage' : 'Privacy-First Design'}
+                </span>
               </div>
             </div>
 
-            {/* Optional Sign Up Prompt for Non-Authenticated Users */}
+            {/* Beautiful Enhanced CTA */}
             {!isSignedIn && (
-              <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 max-w-md mx-auto">
-                <p className="text-sm text-blue-700 dark:text-blue-300 mb-2">
-                  💡 <strong>Pro Tip:</strong> Sign up to save your analysis history!
-                </p>
-                <SignInButton mode="modal">
-                  <button className="text-xs text-blue-600 dark:text-blue-400 hover:underline">
-                    Create free account →
-                  </button>
-                </SignInButton>
+              <div className="mt-10 group">
+                <div className="relative p-8 bg-gradient-to-br from-blue-50/90 via-indigo-50/80 to-purple-50/90 dark:from-blue-900/30 dark:via-indigo-900/20 dark:to-purple-900/30 backdrop-blur-2xl rounded-3xl border border-blue-200/60 max-w-lg mx-auto shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-indigo-600/5 to-purple-600/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-center space-x-3 mb-4">
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-50 animate-pulse"></div>
+                        <div className="relative w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                          <Sparkles className="h-5 w-5 text-white group-hover:animate-spin" />
+                        </div>
+                      </div>
+                      <h3 className="text-xl font-black bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                        Unlock Premium Features! 🎯
+                      </h3>
+                    </div>
+                    <p className="text-base text-gray-700 dark:text-gray-300 mb-6 font-medium">
+                      Join thousands of users who trust us with their health data. Get advanced insights, 
+                      trend analysis, and secure cloud storage - all completely free! 🔥
+                    </p>
+                    <SignInButton mode="modal">
+                      <button className="group w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 border border-white/20">
+                        <span className="flex items-center justify-center space-x-2">
+                          <span>Start Your Journey Free</span>
+                          <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center group-hover:rotate-180 transition-transform duration-500">
+                            <span className="text-xs">✨</span>
+                          </div>
+                        </span>
+                      </button>
+                    </SignInButton>
+                  </div>
+                </div>
               </div>
             )}
           </div>
 
-          {/* Main Content Grid */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-            {/* Upload Section */}
-            <div className="space-y-6">
-              <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg rounded-2xl p-6 shadow-xl border border-white/20">
-                <div className="flex items-center space-x-3 mb-6">
-                  <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
-                    <Upload className="h-5 w-5 text-white" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Upload Lab Report
-                  </h2>
-                  {isProcessing && (
-                    <div className="flex items-center space-x-2 ml-auto">
+          {/* Beautiful Enhanced Main Content Grid */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 lg:gap-12">
+            {/* Beautiful Enhanced Upload Section */}
+            <div className="space-y-8">
+              <div className="group relative bg-gradient-to-br from-white/90 via-blue-50/80 to-indigo-50/90 dark:from-slate-800/90 dark:via-blue-900/80 dark:to-indigo-900/90 backdrop-blur-2xl rounded-3xl p-8 lg:p-10 shadow-2xl border border-blue-200/60 hover:shadow-3xl transition-all duration-700 hover:scale-[1.02] overflow-hidden">
+                {/* Animated background overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-indigo-600/3 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+                    <div className="flex items-center space-x-4 mb-6 sm:mb-0">
                       <div className="relative">
-                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-blue-200 border-t-blue-600"></div>
-                        <div className="absolute inset-0 rounded-full bg-blue-100 animate-ping"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
+                        <div className="relative p-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-2xl shadow-xl group-hover:rotate-6 transition-transform duration-500">
+                          <Upload className="h-6 w-6 text-white" />
+                        </div>
                       </div>
-                      <span className="text-sm font-medium text-blue-600 dark:text-blue-400 animate-pulse">
-                        Processing...
-                      </span>
+                      <div>
+                        <h2 className="text-2xl lg:text-3xl font-black bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                          Upload Lab Report
+                        </h2>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                          PDF, PNG, JPG supported • Drag & drop magic ✨
+                        </p>
+                      </div>
                     </div>
-                  )}
+                    {isProcessing && (
+                      <div className="flex items-center space-x-3 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900/40 dark:via-indigo-900/30 dark:to-purple-900/40 backdrop-blur-xl rounded-2xl px-4 py-3 border border-blue-200/50 shadow-lg">
+                        <div className="relative">
+                          <div className="animate-spin rounded-full h-5 w-5 border-2 border-blue-300 border-t-blue-600 shadow-lg"></div>
+                          <div className="absolute inset-0 rounded-full bg-blue-100 animate-ping opacity-30"></div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-sm font-bold bg-gradient-to-r from-blue-700 to-indigo-700 bg-clip-text text-transparent block">
+                            ✨ Processing Magic...
+                          </span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            AI is analyzing your data
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <FileUpload
+                    onDataExtracted={handleDataExtracted}
+                    isProcessing={isProcessing}
+                    setIsProcessing={setIsProcessing}
+                    onReportSaved={handleReportSaved}
+                  />
                 </div>
-                <FileUpload
-                  onDataExtracted={handleDataExtracted}
-                  isProcessing={isProcessing}
-                  setIsProcessing={setIsProcessing}
-                  onReportSaved={handleReportSaved}
-                />
               </div>
 
-              {/* Stats Cards */}
+              {/* Beautiful Enhanced Stats Cards */}
               {healthParameters.length > 0 && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gradient-to-br from-green-400 to-green-600 rounded-xl p-4 text-white shadow-lg">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-green-100 text-sm">Normal</p>
-                        <p className="text-2xl font-bold">{statusCounts.normal}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="group relative bg-gradient-to-br from-green-50/95 via-emerald-50/90 to-teal-50/95 dark:from-green-900/40 dark:via-emerald-900/30 dark:to-teal-900/40 backdrop-blur-xl rounded-2xl p-6 border border-green-200/60 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-translate-y-2 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 via-emerald-400/5 to-teal-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <p className="text-green-700 dark:text-green-300 text-sm font-bold uppercase tracking-wider mb-1">
+                            ✅ Perfect Range
+                          </p>
+                          <p className="text-3xl font-black bg-gradient-to-r from-green-700 to-emerald-700 dark:from-green-300 dark:to-emerald-300 bg-clip-text text-transparent">
+                            {statusCounts.normal}
+                          </p>
+                        </div>
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-green-500/30 rounded-2xl blur group-hover:bg-green-400/50 transition-colors duration-300"></div>
+                          <div className="relative p-3 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300">
+                            <CheckCircle className="h-7 w-7 text-white" />
+                          </div>
+                        </div>
                       </div>
-                      <CheckCircle className="h-8 w-8 text-green-200" />
+                      <div className="h-2 bg-green-200/40 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full group-hover:animate-pulse transition-all duration-300"></div>
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="bg-gradient-to-br from-red-400 to-red-600 rounded-xl p-4 text-white shadow-lg">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-red-100 text-sm">Abnormal</p>
-                        <p className="text-2xl font-bold">{statusCounts.high + statusCounts.low}</p>
+                  <div className="group relative bg-gradient-to-br from-red-50/95 via-rose-50/90 to-pink-50/95 dark:from-red-900/40 dark:via-rose-900/30 dark:to-pink-900/40 backdrop-blur-xl rounded-2xl p-6 border border-red-200/60 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-translate-y-2 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-red-400/10 via-rose-400/5 to-pink-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <p className="text-red-700 dark:text-red-300 text-sm font-bold uppercase tracking-wider mb-1">
+                            ⚠️ Needs Attention
+                          </p>
+                          <p className="text-3xl font-black bg-gradient-to-r from-red-700 to-rose-700 dark:from-red-300 dark:to-rose-300 bg-clip-text text-transparent">
+                            {statusCounts.high + statusCounts.low}
+                          </p>
+                        </div>
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-red-500/30 rounded-2xl blur group-hover:bg-red-400/50 transition-colors duration-300"></div>
+                          <div className="relative p-3 bg-gradient-to-br from-red-500 to-rose-600 rounded-2xl shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300">
+                            <AlertCircle className="h-7 w-7 text-white" />
+                          </div>
+                        </div>
                       </div>
-                      <AlertCircle className="h-8 w-8 text-red-200" />
+                      <div className="h-2 bg-red-200/40 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-red-400 to-rose-500 rounded-full group-hover:animate-pulse transition-all duration-300"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Results Section */}
+            {/* Professional Results Section */}
             <div className="space-y-6">
-              <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg rounded-2xl p-6 shadow-xl border border-white/20">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg">
+              <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-lg border border-gray-200/50 dark:border-slate-700/50">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                  <div className="flex items-center space-x-3 mb-4 sm:mb-0">
+                    <div className="p-2.5 bg-indigo-600 rounded-xl shadow-sm">
                       <TrendingUp className="h-5 w-5 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                      Health Parameters
-                    </h2>
+                    <div>
+                      <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">
+                        Analysis Results
+                      </h2>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        AI-extracted parameters
+                      </p>
+                    </div>
                   </div>
                   
                   {healthParameters.length > 0 && (
-                    <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/50 dark:to-purple-900/50 rounded-full px-4 py-2">
-                      <Sparkles className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                      <span className="text-sm font-semibold text-blue-700 dark:text-blue-300">
-                        {healthParameters.length} parameter{healthParameters.length !== 1 ? 's' : ''} found
+                    <div className="flex items-center space-x-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl px-3 py-2">
+                      <Sparkles className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                      <span className="text-sm font-medium text-indigo-700 dark:text-indigo-300">
+                        {healthParameters.length} parameters found
                       </span>
                     </div>
                   )}
@@ -281,44 +407,41 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Enhanced Footer Notice */}
+          {/* Professional Medical Disclaimer */}
           {healthParameters.length > 0 && (
-            <div className="mt-12">
-              <div className="relative bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 dark:from-blue-500/20 dark:via-purple-500/20 dark:to-pink-500/20 rounded-2xl p-8 border border-blue-200/50 dark:border-blue-700/50 backdrop-blur-sm">
-                <div className="absolute top-4 right-4">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse animation-delay-200"></div>
-                    <div className="w-2 h-2 bg-pink-400 rounded-full animate-pulse animation-delay-400"></div>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-4">
-                  <div className="p-3 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full flex-shrink-0">
-                    <Shield className="h-6 w-6 text-white" />
+            <div className="mt-12 lg:mt-16">
+              <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl p-6 lg:p-8 border border-amber-200/50 dark:border-amber-700/50 shadow-lg">
+                <div className="flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                  <div className="flex-shrink-0">
+                    <div className="p-3 bg-amber-600 rounded-xl shadow-sm">
+                      <Shield className="h-6 w-6 text-white" />
+                    </div>
                   </div>
                   
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center space-x-2">
-                      <span>Medical Disclaimer</span>
-                      <div className="h-1 w-1 bg-gray-400 rounded-full"></div>
-                      <span className="text-sm font-normal text-amber-600 dark:text-amber-400">Important</span>
+                  <div className="flex-1 space-y-3">
+                    <h3 className="text-lg font-bold text-amber-900 dark:text-amber-100">
+                      Important Medical Disclaimer
                     </h3>
                     
                     <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                      This analysis is for <strong>informational purposes only</strong> and should not replace professional medical advice. 
-                      Please consult your healthcare provider for proper interpretation of your lab results. The AI-powered extraction 
-                      may contain errors and should be verified against your original report.
+                      This AI-powered analysis is for <strong>informational purposes only</strong> and should 
+                      <strong> never replace professional medical advice</strong>. Always consult your healthcare 
+                      provider for proper interpretation of lab results. Our AI extraction may contain errors - 
+                      please verify against your original report.
                     </p>
                     
-                    <div className="flex items-center space-x-4 pt-2">
-                      <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <div className="flex flex-wrap gap-3 pt-2">
+                      <div className="flex items-center space-x-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                         <span>Privacy Protected</span>
                       </div>
-                      <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                        <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                        <span>{isSignedIn ? 'Data Saved Securely' : 'No Data Stored (unless you sign up)'}</span>
+                      <div className="flex items-center space-x-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <span>{isSignedIn ? 'Securely Stored' : 'Not Stored'}</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                        <span>AI-Powered</span>
                       </div>
                     </div>
                   </div>
@@ -327,47 +450,47 @@ export default function Home() {
             </div>
           )}
 
-          {/* Report History - Only for Authenticated Users */}
+          {/* Professional Report History */}
           {isSignedIn && user && (
-            <ReportHistory 
-              userId={user.id} 
-              onReportSelect={handleReportSelect}
-              refreshTrigger={refreshTrigger}
-            />
+            <div className="mt-12 lg:mt-16">
+              <ReportHistory 
+                userId={user.id} 
+                onReportSelect={handleReportSelect}
+                refreshTrigger={refreshTrigger}
+              />
+            </div>
           )}
         </div>
       </main>
 
-      {/* Custom CSS for animations */}
+      {/* Professional Custom Styles */}
       <style jsx>{`
-        @keyframes blob {
-          0% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-          100% {
-            transform: translate(0px, 0px) scale(1);
+        .blur-3xl {
+          filter: blur(64px);
+        }
+        
+        @media (max-width: 640px) {
+          .container {
+            padding-left: 1rem;
+            padding-right: 1rem;
           }
         }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-        .animation-delay-200 {
-          animation-delay: 200ms;
-        }
-        .animation-delay-400 {
-          animation-delay: 400ms;
+        
+        @media (max-width: 480px) {
+          .text-3xl {
+            font-size: 1.75rem;
+            line-height: 2.25rem;
+          }
+          
+          .text-4xl {
+            font-size: 2rem;
+            line-height: 2.5rem;
+          }
+          
+          .text-5xl {
+            font-size: 2.5rem;
+            line-height: 3rem;
+          }
         }
       `}</style>
     </div>

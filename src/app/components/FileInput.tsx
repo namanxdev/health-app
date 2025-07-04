@@ -1,8 +1,12 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Upload, FileText, Image as ImageIcon, X, AlertCircle } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
+import Tesseract from 'tesseract.js';
+
+// This will be populated by the useEffect hook
+let pdfjsLib: any = null;
 
 interface HealthParameter {
   name: string;
@@ -16,7 +20,7 @@ interface FileUploadProps {
   onDataExtracted: (data: HealthParameter[]) => void;
   isProcessing: boolean;
   setIsProcessing: (processing: boolean) => void;
-  onReportSaved?: () => void; // Add this prop
+  onReportSaved?: () => void; 
 }
 
 export default function FileUpload({ onDataExtracted, isProcessing, setIsProcessing, onReportSaved }: FileUploadProps) {
@@ -26,6 +30,29 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
   const [error, setError] = useState<string>('');
   const [progress, setProgress] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // FINAL FIX: Initialize PDF.js using a local worker file
+  useEffect(() => {
+    const initPdfJs = async () => {
+      if (typeof window !== 'undefined' && !pdfjsLib) {
+        try {
+          // Import the main library using the correct path
+          const pdfjs = await import('pdfjs-dist');
+          
+          // Point to the worker file we copied to the public folder
+          pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.js`;
+          
+          pdfjsLib = pdfjs;
+          // console.log('✅ PDF.js initialized successfully with local worker.');
+        } catch (initError) {
+          // console.error('❌ Failed to initialize PDF.js:', initError);
+          setError("Could not load PDF viewer. Please try refreshing the page.");
+        }
+      }
+    };
+    
+    initPdfJs();
+  }, []);
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -50,14 +77,12 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
   const handleFileSelect = (file: File) => {
     setError('');
     
-    // Validate file type
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
       setError('Please upload a PDF or image file (JPEG, PNG, WebP)');
       return;
     }
 
-    // Validate file size (10MB limit)
     if (file.size > 10 * 1024 * 1024) {
       setError('File size must be less than 10MB');
       return;
@@ -81,6 +106,68 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
     }
   };
 
+  // Convert PDF to image with better error handling
+  const convertPdfToImage = async (file: File): Promise<string> => {
+    if (!pdfjsLib) {
+      throw new Error('PDF.js not initialized. Please wait a moment and try again.');
+    }
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const typedArray = new Uint8Array(e.target?.result as ArrayBuffer);
+          
+          const loadingTask = pdfjsLib.getDocument({
+            data: typedArray,
+            useSystemFonts: true,
+            disableFontFace: false,
+          });
+          
+          const pdf = await loadingTask.promise;
+          const page = await pdf.getPage(1);
+          
+          const scale = 2.0;
+          const viewport = page.getViewport({ scale });
+          
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          
+          if (!context) {
+            reject(new Error('Failed to get canvas context'));
+            return;
+          }
+          
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          
+          const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+          
+          await page.render(renderContext).promise;
+          
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const url = URL.createObjectURL(blob);
+              resolve(url);
+            } else {
+              reject(new Error('Failed to convert PDF to image'));
+            }
+          }, 'image/png', 0.95);
+          
+        } catch (error) {
+          // console.error('PDF conversion error:', error);
+          reject(new Error(`PDF conversion failed: ${error instanceof Error ? error.message : 'Unknown error'}`));
+        }
+      };
+      
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
   const processFile = async () => {
     if (!uploadedFile) {
       setError('Please select a file to upload');
@@ -92,29 +179,37 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
     setProgress('Starting file analysis...');
 
     try {
-      // OCR Processing
-      setProgress('Extracting text from your lab report...');
-      const { createWorker } = await import('tesseract.js');
+      let imageUrl: string;
       
-      const worker = await createWorker('eng', 1, {
-        logger: (m) => {
-          // console.log('Tesseract:', m);
+      if (uploadedFile.type === 'application/pdf') {
+        // console.log('🔄 Converting PDF to image...');
+        setProgress('Converting PDF to image...');
+        imageUrl = await convertPdfToImage(uploadedFile);
+        setProgress('PDF converted successfully');
+      } else {
+        imageUrl = URL.createObjectURL(uploadedFile);
+        setProgress('Image loaded');
+      }
+
+      // console.log('🔍 Starting OCR processing...');
+      setProgress('Extracting text from image...');
+      
+      const worker = await Tesseract.createWorker('eng', 1, {
+        logger: (m: any) => {
           if (m.status === 'recognizing text') {
-            const progress = Math.round(m.progress * 100);
-            setProgress(`Analyzing document... ${progress}%`);
+            setProgress(`Extracting text: ${Math.round(m.progress * 100)}%`);
           }
         }
       });
-
-      const { data: { text } } = await worker.recognize(uploadedFile);
       
-      // console.log('✅ OCR completed. Extracted text:');
-      // console.log(text);
-      
+      const { data: { text } } = await worker.recognize(imageUrl);
       await worker.terminate();
+      
+      URL.revokeObjectURL(imageUrl);
 
-      // Parse health parameters
+      // console.log('📄 Extracted text:', text);
       setProgress('Analyzing health parameters...');
+
       const response = await fetch('/api/process-report', {
         method: 'POST',
         headers: {
@@ -128,9 +223,7 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
       }
 
       const result = await response.json();
-      // console.log('✅ Health data parsed:', result.parameters);
 
-      // Save to database ONLY if user is signed in and we have parameters
       if (isSignedIn && user?.id && result.parameters?.length > 0) {
         setProgress('Saving report to your account...');
         
@@ -139,12 +232,12 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'x-user-id': user.id, // Send user ID in header
+              'x-user-id': user.id,
             },
             body: JSON.stringify({
               fileName: uploadedFile.name,
               fileSize: uploadedFile.size,
-              extractedText: text, // Fix: use 'text' not 'text.data.text'
+              extractedText: text,
               healthParameters: result.parameters,
             }),
           });
@@ -153,7 +246,6 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
           
           if (saveResult.success) {
             setProgress('✅ Report saved to your account!');
-            // Trigger refresh in parent component
             if (onReportSaved) {
               onReportSaved();
             }
@@ -161,7 +253,6 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
             setProgress('⚠️ Analysis complete (save failed)');
           }
         } catch (saveError) {
-          // console.error('Error saving report:', saveError);
           setProgress('⚠️ Analysis complete (save failed)');
         }
       } else if (!isSignedIn) {
@@ -170,17 +261,15 @@ export default function FileUpload({ onDataExtracted, isProcessing, setIsProcess
         setProgress('✅ Analysis complete!');
       }
 
-      // Update UI
       onDataExtracted(result.parameters || []);
       
-      // Clear progress after showing success
       setTimeout(() => {
         setProgress('');
       }, 4000);
       
     } catch (err) {
       // console.error('❌ Processing error:', err);
-      setError('Failed to process the file. Please try again.');
+      setError(`Failed to process the file: ${err instanceof Error ? err.message : 'Unknown error'}`);
       setProgress('');
     } finally {
       setIsProcessing(false);

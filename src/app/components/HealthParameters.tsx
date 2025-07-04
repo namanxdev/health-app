@@ -26,8 +26,8 @@ interface HealthParametersTableProps {
 
 export default function HealthParametersTable({ parameters }: HealthParametersTableProps) {
   // Add debugging
-  console.log('🔍 HealthParametersTable received parameters:', parameters);
-  console.log('📊 Parameters length:', parameters.length);
+  // console.log('🔍 HealthParametersTable received parameters:', parameters);
+  // console.log('📊 Parameters length:', parameters.length);
 
   const getStatusBadge = (status?: 'normal' | 'high' | 'low') => {
     switch (status) {
@@ -119,7 +119,7 @@ export default function HealthParametersTable({ parameters }: HealthParametersTa
           </TableHeader>
           <TableBody>
             {parameters.map((param, index) => {
-              console.log(`🔍 Rendering parameter ${index}:`, param);
+              // console.log(`🔍 Rendering parameter ${index}:`, param);
               return (
                 <TableRow 
                   key={index} 
