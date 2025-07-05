@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     // Save to database
     const savedReport = await healthReport.save();
 
-    console.log(`✅ Health report saved for user ${userId}:`, savedReport._id);
+    // console.log(`✅ Health report saved for user ${userId}:`, savedReport._id);
 
     return NextResponse.json({
       success: true,
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('❌ Error saving health report:', error);
+    // console.error('❌ Error saving health report:', error);
     return NextResponse.json(
       { 
         success: false,
@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
       .limit(50) // Limit to last 50 reports for performance
       .lean<LeanHealthReport[]>(); // Type the lean query result
 
-    console.log(`📊 Fetched ${reports.length} reports for user ${userId}`);
+    // console.log(`📊 Fetched ${reports.length} reports for user ${userId}`);
 
     return NextResponse.json({
       success: true,
@@ -126,7 +126,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('❌ Error fetching health reports:', error);
+    // console.error('❌ Error fetching health reports:', error);
     return NextResponse.json(
       { 
         success: false,

@@ -46,12 +46,12 @@ export default function ReportHistory({ userId, onReportSelect, refreshTrigger }
       
       if (result.success) {
         setReports(result.reports);
-        console.log(`📊 Loaded ${result.reports.length} reports from history`);
+        // console.log(`📊 Loaded ${result.reports.length} reports from history`);
       } else {
         setError(result.error || 'Failed to load reports');
       }
     } catch (err) {
-      console.error('Error fetching reports:', err);
+      // console.error('Error fetching reports:', err);
       setError('Failed to load report history');
     } finally {
       setLoading(false);

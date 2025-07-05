@@ -16,15 +16,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No text provided' }, { status: 400 });
     }
 
-    console.log('📝 Received text for parsing:');
-    console.log('='.repeat(50));
-    console.log(text);
-    console.log('='.repeat(50));
+    // console.log('📝 Received text for parsing:');
+    // console.log('='.repeat(50));
+    // console.log(text);
+    // console.log('='.repeat(50));
 
     const parameters = parseHealthParameters(text);
     
-    console.log('🔍 Parsed parameters:', parameters.length, 'found');
-    console.table(parameters);
+    // console.log('🔍 Parsed parameters:', parameters.length, 'found');
+    // console.table(parameters);
 
     return NextResponse.json({ 
       success: true, 
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('❌ Error parsing text:', error);
+    // console.error('❌ Error parsing text:', error);
     return NextResponse.json(
       { error: 'Failed to parse text' }, 
       { status: 500 }
@@ -44,9 +44,9 @@ function parseHealthParameters(text: string): HealthParameter[] {
   const parameters: HealthParameter[] = [];
   const lines = text.split('\n').filter(line => line.trim().length > 0);
 
-  console.log('🔍 All lines to parse:');
+  // console.log('🔍 All lines to parse:');
   lines.forEach((line, index) => {
-    console.log(`Line ${index}: "${line}"`);
+    // console.log(`Line ${index}: "${line}"`);
   });
 
   // Enhanced patterns for different lab report formats
@@ -77,11 +77,11 @@ function parseHealthParameters(text: string): HealthParameter[] {
     'pressure', 'level', 'serum', 'plasma', 'volume'
   ];
 
-  console.log('🔍 Parsing lines:', lines.length);
+  // console.log('🔍 Parsing lines:', lines.length);
 
   // First, try to parse each line individually
   for (const line of lines) {
-    console.log('📝 Processing line:', line);
+    // console.log('📝 Processing line:', line);
     
     // Manual parsing for specific patterns in this lab report
     if (line.includes('HAEMOGLOBIN') && /[0-9.]+/.test(line)) {
@@ -95,7 +95,7 @@ function parseHealthParameters(text: string): HealthParameter[] {
           normalRange: rangeMatch ? rangeMatch[1] : '12.0-15.0',
           status: determineStatus(parseFloat(valueMatch[1]), rangeMatch ? rangeMatch[1] : '12.0-15.0')
         });
-        console.log('✅ Added Haemoglobin manually');
+        // console.log('✅ Added Haemoglobin manually');
       }
     }
     
@@ -110,7 +110,7 @@ function parseHealthParameters(text: string): HealthParameter[] {
           normalRange: rangeMatch ? rangeMatch[1] : '3.8-4.8',
           status: determineStatus(parseFloat(valueMatch[1]), rangeMatch ? rangeMatch[1] : '3.8-4.8')
         });
-        console.log('✅ Added RBC Count manually');
+        // console.log('✅ Added RBC Count manually');
       }
     }
     
@@ -125,7 +125,7 @@ function parseHealthParameters(text: string): HealthParameter[] {
           normalRange: rangeMatch ? rangeMatch[1] : '36.0-46.0',
           status: determineStatus(parseFloat(valueMatch[1]), rangeMatch ? rangeMatch[1] : '36.0-46.0')
         });
-        console.log('✅ Added PCV manually');
+        // console.log('✅ Added PCV manually');
       }
     }
     
@@ -139,7 +139,7 @@ function parseHealthParameters(text: string): HealthParameter[] {
           normalRange: '80-100',
           status: determineStatus(parseFloat(valueMatch[1]), '80-100')
         });
-        console.log('✅ Added MCV manually');
+        // console.log('✅ Added MCV manually');
       }
     }
     
@@ -154,7 +154,7 @@ function parseHealthParameters(text: string): HealthParameter[] {
           normalRange: rangeMatch ? rangeMatch[1] : '150-450',
           status: determineStatus(parseFloat(valueMatch[1]), rangeMatch ? rangeMatch[1] : '150-450')
         });
-        console.log('✅ Added Platelet Count manually');
+        // console.log('✅ Added Platelet Count manually');
       }
     }
     
@@ -169,7 +169,7 @@ function parseHealthParameters(text: string): HealthParameter[] {
           normalRange: rangeMatch ? rangeMatch[1] : '4.0-10.0',
           status: determineStatus(parseFloat(valueMatch[1]), rangeMatch ? rangeMatch[1] : '4.0-10.0')
         });
-        console.log('✅ Added Total Count manually');
+        // console.log('✅ Added Total Count manually');
       }
     }
     
@@ -183,7 +183,7 @@ function parseHealthParameters(text: string): HealthParameter[] {
         const unit = match[3]?.trim();
         const range = match[4]?.trim() || match[5]?.trim();
 
-        console.log('🎯 Found regex match:', { name, value, unit, range });
+        // console.log('🎯 Found regex match:', { name, value, unit, range });
 
         if (name && value && isHealthParameter(name, healthKeywords)) {
           const status = determineStatus(parseFloat(value), range);
@@ -197,7 +197,7 @@ function parseHealthParameters(text: string): HealthParameter[] {
           };
           
           parameters.push(parameter);
-          console.log('✅ Added parameter via regex:', parameter);
+          // console.log('✅ Added parameter via regex:', parameter);
         }
       }
       
@@ -205,7 +205,7 @@ function parseHealthParameters(text: string): HealthParameter[] {
     }
   }
 
-  console.log('🎉 Final parsed parameters:', parameters);
+  // console.log('🎉 Final parsed parameters:', parameters);
   return parameters;
 }
 
@@ -214,14 +214,14 @@ function isHealthParameter(name: string, keywords: string[]): boolean {
   const isMatch = keywords.some(keyword => lowerName.includes(keyword)) || 
          lowerName.length > 2;
   
-  console.log('🔍 Health parameter check:', name, '→', isMatch);
+  // console.log('🔍 Health parameter check:', name, '→', isMatch);
   return isMatch;
 }
 
 function determineStatus(value: number, range?: string): 'normal' | 'high' | 'low' | undefined {
   if (!range) return undefined;
 
-  console.log('📊 Determining status for value:', value, 'range:', range);
+  // console.log('📊 Determining status for value:', value, 'range:', range);
 
   const rangeMatch = range.match(/([0-9.]+)\s*-\s*([0-9.]+)/);
   const lessThanMatch = range.match(/<\s*([0-9.]+)/);
