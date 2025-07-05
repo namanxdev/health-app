@@ -79,7 +79,7 @@ export default function HealthParametersTable({ parameters }: HealthParametersTa
   return (
     <div className="space-y-4">
       {/* Debug Info - Remove this in production */}
-      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+      {/* <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
         <p className="text-blue-700 dark:text-blue-300 text-sm">
           🔍 Debug: Found {parameters.length} parameters
         </p>
@@ -91,7 +91,7 @@ export default function HealthParametersTable({ parameters }: HealthParametersTa
             {JSON.stringify(parameters, null, 2)}
           </pre>
         </details>
-      </div>
+      </div> */}
 
       <div className="rounded-lg border bg-white dark:bg-slate-800 shadow-sm overflow-hidden">
         <Table>

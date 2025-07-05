@@ -39,7 +39,7 @@ export default function ReportHistory({ userId, onReportSelect, refreshTrigger }
     try {
       const response = await fetch('/api/save-report', {
         headers: {
-          'x-user-id': userId, // Send user ID in header
+          'x-user-id': userId, 
         },
       });
       const result = await response.json();
